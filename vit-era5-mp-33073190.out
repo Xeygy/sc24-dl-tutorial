@@ -1,0 +1,130 @@
++ srun -u shifter -V /pscratch/sd/s/shas1693/data/sc24_tutorial_data:/data -V /pscratch/sd/t/train993/sc24-dl-tutorial/logs:/logs bash -c '
+    source export_DDP_vars.sh
+     python train_mp.py --config=mp --tensor_parallel=4
+    '
+2024-11-18 21:16:25,476 - root - INFO - Setting DP = 4, TP = 4, CP = 1, PP = 1
+2024-11-18 21:16:25,484 - root - INFO - ------------------ Configuration ------------------
+2024-11-18 21:16:25,484 - root - INFO - Configuration file: /global/u1/t/train993/sc24-dl-tutorial/config/ViT.yaml
+2024-11-18 21:16:25,485 - root - INFO - Configuration name: mp
+2024-11-18 21:16:25,485 - root - INFO - num_iters 30000
+2024-11-18 21:16:25,485 - root - INFO - global_batch_size 64
+2024-11-18 21:16:25,485 - root - INFO - lr 0.001
+2024-11-18 21:16:25,485 - root - INFO - num_data_workers 8
+2024-11-18 21:16:25,485 - root - INFO - embed_dim 1024
+2024-11-18 21:16:25,485 - root - INFO - data_loader_config dali
+2024-11-18 21:16:25,485 - root - INFO - amp_mode fp16
+2024-11-18 21:16:25,485 - root - INFO - enable_jit False
+2024-11-18 21:16:25,485 - root - INFO - enable_fused False
+2024-11-18 21:16:25,485 - root - INFO - depth 12
+2024-11-18 21:16:25,485 - root - INFO - dropout 0.0
+2024-11-18 21:16:25,485 - root - INFO - patch_size 8
+2024-11-18 21:16:25,485 - root - INFO - num_heads 8
+2024-11-18 21:16:25,485 - root - INFO - img_size [360, 720]
+2024-11-18 21:16:25,485 - root - INFO - dt 1
+2024-11-18 21:16:25,485 - root - INFO - expdir /logs
+2024-11-18 21:16:25,486 - root - INFO - lr_schedule cosine
+2024-11-18 21:16:25,486 - root - INFO - warmup 0
+2024-11-18 21:16:25,486 - root - INFO - optimizer Adam
+2024-11-18 21:16:25,486 - root - INFO - n_in_channels 20
+2024-11-18 21:16:25,486 - root - INFO - n_out_channels 20
+2024-11-18 21:16:25,486 - root - INFO - train_data_path /data/train
+2024-11-18 21:16:25,486 - root - INFO - valid_data_path /data/valid
+2024-11-18 21:16:25,486 - root - INFO - inf_data_path /data/test
+2024-11-18 21:16:25,486 - root - INFO - time_means_path /data/stats/time_means.npy
+2024-11-18 21:16:25,486 - root - INFO - global_means_path /data/stats/global_means.npy
+2024-11-18 21:16:25,486 - root - INFO - global_stds_path /data/stats/global_stds.npy
+2024-11-18 21:16:25,486 - root - INFO - limit_nsamples None
+2024-11-18 21:16:25,486 - root - INFO - limit_nsamples_val None
+2024-11-18 21:16:25,486 - root - INFO - wireup_info env
+2024-11-18 21:16:25,486 - root - INFO - wireup_store tcp
+2024-11-18 21:16:25,486 - root - INFO - amp_enabled True
+2024-11-18 21:16:25,486 - root - INFO - amp_dtype torch.float16
+2024-11-18 21:16:25,486 - root - INFO - tp 4
+2024-11-18 21:16:25,486 - root - INFO - cp 1
+2024-11-18 21:16:25,487 - root - INFO - order tp-cp-dp
+2024-11-18 21:16:25,487 - root - INFO - ---------------------------------------------------
+2024-11-18 21:16:25,595 - root - INFO - rank 0, begin data loader init
+2024-11-18 21:16:26,106 - root - INFO - Getting file stats from /data/train/1990.h5
+2024-11-18 21:16:26,107 - root - INFO - Number of samples per year: 1460
+2024-11-18 21:16:26,107 - root - INFO - Found data at path /data/train. Number of examples: 37960. Image Shape: 360 x 720 x 20
+2024-11-18 21:16:26,107 - root - INFO - Using shards of size 9490 per rank
+2024-11-18 21:16:26,387 - root - INFO - Getting file stats from /data/train/1990.h5
+2024-11-18 21:16:45,129 - root - INFO - Getting file stats from /data/valid/2016.h5
+2024-11-18 21:16:45,130 - root - INFO - Number of samples per year: 1460
+2024-11-18 21:16:45,131 - root - INFO - Found data at path /data/valid. Number of examples: 2920. Image Shape: 360 x 720 x 20
+2024-11-18 21:16:45,131 - root - INFO - Using shards of size 730 per rank
+2024-11-18 21:16:45,281 - root - INFO - Getting file stats from /data/valid/2016.h5
+2024-11-18 21:17:03,106 - root - INFO - rank 0, data loader initialized
+2024-11-18 21:17:17,848 - root - INFO - DistributedDataParallel(
+  (module): VisionTransformer(
+    (patch_embed): PatchEmbed(
+      (proj): Conv2d(20, 1024, kernel_size=(8, 8), stride=(8, 8))
+    )
+    (pos_drop): Dropout(p=0.0, inplace=False)
+    (blocks): ModuleList(
+      (0-11): 12 x Block(
+        (drop_path): Identity()
+        (attn): DistributedAttention(
+          (q): DistributedMatmul()
+          (k): DistributedMatmul()
+          (v): DistributedMatmul()
+          (attn_drop): Dropout(p=0.0, inplace=False)
+          (proj): DistributedMatmul()
+          (proj_drop): Dropout(p=0.0, inplace=False)
+        )
+        (mlp): DistributedMLP(
+          (fc1): DistributedMatmul()
+          (fc2): DistributedMatmul()
+          (act): GELU(approximate='none')
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (norm1): DistributedLayerNorm(
+          (norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+        )
+        (norm2): DistributedLayerNorm(
+          (norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+        )
+      )
+    )
+    (norm): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+    (head): Linear(in_features=1024, out_features=1280, bias=False)
+  )
+)
+2024-11-18 21:17:17,850 - root - INFO - Scaffolding memory high watermark: 10.1824951171875 GB.
+2024-11-18 21:17:17,850 - root - INFO - Starting Training Loop...
+2024-11-18 21:17:28,270 - root - INFO -  Memory usage after forward pass: 31.4676513671875 GB.
+2024-11-18 21:23:16,374 - root - INFO - Time taken for epoch 1 is 352.303469 sec, avg 107.543647 samples/sec
+2024-11-18 21:23:16,375 - root - INFO -   Avg train loss=0.329792
+2024-11-18 21:23:26,473 - root - INFO -   Avg val loss=0.24412116408348083
+2024-11-18 21:23:26,473 - root - INFO -   Total validation time: 8.567163467407227 sec
+2024-11-18 21:23:27,097 - root - INFO -  Memory usage after forward pass: 33.3328857421875 GB.
+2024-11-18 21:28:29,944 - root - INFO - Time taken for epoch 2 is 303.466130 sec, avg 125.061733 samples/sec
+2024-11-18 21:28:29,946 - root - INFO -   Avg train loss=0.205929
+2024-11-18 21:28:39,306 - root - INFO -   Avg val loss=0.17656846344470978
+2024-11-18 21:28:39,306 - root - INFO -   Total validation time: 7.865984201431274 sec
+2024-11-18 21:28:39,901 - root - INFO -  Memory usage after forward pass: 33.3328857421875 GB.
+2024-11-18 21:33:42,321 - root - INFO - Time taken for epoch 3 is 303.010488 sec, avg 125.249790 samples/sec
+2024-11-18 21:33:42,326 - root - INFO -   Avg train loss=0.160226
+2024-11-18 21:33:50,757 - root - INFO -   Avg val loss=0.1495099812746048
+2024-11-18 21:33:50,758 - root - INFO -   Total validation time: 7.854818344116211 sec
+2024-11-18 21:33:51,406 - root - INFO -  Memory usage after forward pass: 33.3328857421875 GB.
+2024-11-18 21:38:53,977 - root - INFO - Time taken for epoch 4 is 303.207051 sec, avg 125.168593 samples/sec
+2024-11-18 21:38:53,979 - root - INFO -   Avg train loss=0.142458
+2024-11-18 21:39:02,344 - root - INFO -   Avg val loss=0.13741837441921234
+2024-11-18 21:39:02,345 - root - INFO -   Total validation time: 7.8016204833984375 sec
+2024-11-18 21:39:03,050 - root - INFO -  Memory usage after forward pass: 33.3328857421875 GB.
+2024-11-18 21:44:05,987 - root - INFO - Time taken for epoch 5 is 303.630383 sec, avg 124.994079 samples/sec
+2024-11-18 21:44:05,989 - root - INFO -   Avg train loss=0.133379
+2024-11-18 21:44:14,338 - root - INFO -   Avg val loss=0.129914328455925
+2024-11-18 21:44:14,338 - root - INFO -   Total validation time: 7.789398193359375 sec
+2024-11-18 21:44:15,016 - root - INFO -  Memory usage after forward pass: 33.3328857421875 GB.
+2024-11-18 21:49:17,713 - root - INFO - Time taken for epoch 6 is 303.359733 sec, avg 125.105595 samples/sec
+2024-11-18 21:49:17,715 - root - INFO -   Avg train loss=0.126334
+2024-11-18 21:49:26,080 - root - INFO -   Avg val loss=0.12497571855783463
+2024-11-18 21:49:26,081 - root - INFO -   Total validation time: 7.796903371810913 sec
+2024-11-18 21:49:26,766 - root - INFO -  Memory usage after forward pass: 33.3328857421875 GB.
+2024-11-18 21:54:31,303 - root - INFO - Time taken for epoch 7 is 305.211391 sec, avg 124.346604 samples/sec
+2024-11-18 21:54:31,305 - root - INFO -   Avg train loss=0.121509
+2024-11-18 21:54:39,699 - root - INFO -   Avg val loss=0.12112940102815628
+2024-11-18 21:54:39,699 - root - INFO -   Total validation time: 7.810924291610718 sec
+2024-11-18 21:54:40,365 - root - INFO -  Memory usage after forward pass: 33.3328857421875 GB.

@@ -1,0 +1,230 @@
++ srun -u shifter -V /pscratch/sd/s/shas1693/data/sc24_tutorial_data:/data -V /pscratch/sd/t/train993/sc24-dl-tutorial/logs:/logs bash -c '
+    source export_DDP_vars.sh
+     python train_mp.py --config=mp --tensor_parallel=1
+    '
+2024-11-18 21:15:16,792 - root - INFO - Setting DP = 4, TP = 1, CP = 1, PP = 1
+2024-11-18 21:15:16,797 - root - INFO - ------------------ Configuration ------------------
+2024-11-18 21:15:16,799 - root - INFO - Configuration file: /global/u1/t/train993/sc24-dl-tutorial/config/ViT.yaml
+2024-11-18 21:15:16,799 - root - INFO - Configuration name: mp
+2024-11-18 21:15:16,799 - root - INFO - num_iters 30000
+2024-11-18 21:15:16,799 - root - INFO - global_batch_size 64
+2024-11-18 21:15:16,799 - root - INFO - lr 0.001
+2024-11-18 21:15:16,799 - root - INFO - num_data_workers 8
+2024-11-18 21:15:16,799 - root - INFO - embed_dim 1024
+2024-11-18 21:15:16,799 - root - INFO - data_loader_config dali
+2024-11-18 21:15:16,799 - root - INFO - amp_mode fp16
+2024-11-18 21:15:16,799 - root - INFO - enable_jit False
+2024-11-18 21:15:16,799 - root - INFO - enable_fused False
+2024-11-18 21:15:16,799 - root - INFO - depth 12
+2024-11-18 21:15:16,799 - root - INFO - dropout 0.0
+2024-11-18 21:15:16,799 - root - INFO - patch_size 8
+2024-11-18 21:15:16,799 - root - INFO - num_heads 8
+2024-11-18 21:15:16,799 - root - INFO - img_size [360, 720]
+2024-11-18 21:15:16,799 - root - INFO - dt 1
+2024-11-18 21:15:16,800 - root - INFO - expdir /logs
+2024-11-18 21:15:16,800 - root - INFO - lr_schedule cosine
+2024-11-18 21:15:16,800 - root - INFO - warmup 0
+2024-11-18 21:15:16,800 - root - INFO - optimizer Adam
+2024-11-18 21:15:16,800 - root - INFO - n_in_channels 20
+2024-11-18 21:15:16,800 - root - INFO - n_out_channels 20
+2024-11-18 21:15:16,800 - root - INFO - train_data_path /data/train
+2024-11-18 21:15:16,800 - root - INFO - valid_data_path /data/valid
+2024-11-18 21:15:16,800 - root - INFO - inf_data_path /data/test
+2024-11-18 21:15:16,800 - root - INFO - time_means_path /data/stats/time_means.npy
+2024-11-18 21:15:16,800 - root - INFO - global_means_path /data/stats/global_means.npy
+2024-11-18 21:15:16,800 - root - INFO - global_stds_path /data/stats/global_stds.npy
+2024-11-18 21:15:16,800 - root - INFO - limit_nsamples None
+2024-11-18 21:15:16,800 - root - INFO - limit_nsamples_val None
+2024-11-18 21:15:16,800 - root - INFO - wireup_info env
+2024-11-18 21:15:16,800 - root - INFO - wireup_store tcp
+2024-11-18 21:15:16,800 - root - INFO - amp_enabled True
+2024-11-18 21:15:16,800 - root - INFO - amp_dtype torch.float16
+2024-11-18 21:15:16,800 - root - INFO - tp 1
+2024-11-18 21:15:16,801 - root - INFO - cp 1
+2024-11-18 21:15:16,801 - root - INFO - order tp-cp-dp
+2024-11-18 21:15:16,801 - root - INFO - ---------------------------------------------------
+2024-11-18 21:15:17,047 - root - INFO - rank 0, begin data loader init
+2024-11-18 21:15:21,769 - root - INFO - Getting file stats from /data/train/1990.h5
+2024-11-18 21:15:21,769 - root - INFO - Number of samples per year: 1460
+2024-11-18 21:15:21,769 - root - INFO - Found data at path /data/train. Number of examples: 37960. Image Shape: 360 x 720 x 20
+2024-11-18 21:15:21,769 - root - INFO - Using shards of size 9490 per rank
+2024-11-18 21:15:22,120 - root - INFO - Getting file stats from /data/train/1990.h5
+2024-11-18 21:15:40,822 - root - INFO - Getting file stats from /data/valid/2016.h5
+2024-11-18 21:15:40,823 - root - INFO - Number of samples per year: 1460
+2024-11-18 21:15:40,823 - root - INFO - Found data at path /data/valid. Number of examples: 2920. Image Shape: 360 x 720 x 20
+2024-11-18 21:15:40,823 - root - INFO - Using shards of size 730 per rank
+2024-11-18 21:15:40,975 - root - INFO - Getting file stats from /data/valid/2016.h5
+2024-11-18 21:15:59,412 - root - INFO - rank 0, data loader initialized
+2024-11-18 21:16:04,277 - root - INFO - DistributedDataParallel(
+  (module): VisionTransformer(
+    (patch_embed): PatchEmbed(
+      (proj): Conv2d(20, 1024, kernel_size=(8, 8), stride=(8, 8))
+    )
+    (pos_drop): Dropout(p=0.0, inplace=False)
+    (blocks): ModuleList(
+      (0-11): 12 x Block(
+        (drop_path): Identity()
+        (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+        (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+        (attn): Attention(
+          (q): Linear(in_features=1024, out_features=1024, bias=True)
+          (k): Linear(in_features=1024, out_features=1024, bias=True)
+          (v): Linear(in_features=1024, out_features=1024, bias=True)
+          (attn_drop): Dropout(p=0.0, inplace=False)
+          (proj): Linear(in_features=1024, out_features=1024, bias=True)
+          (proj_drop): Dropout(p=0.0, inplace=False)
+        )
+        (mlp): MLP(
+          (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+          (act): GELU(approximate='none')
+          (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+      )
+    )
+    (norm): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+    (head): Linear(in_features=1024, out_features=1280, bias=False)
+  )
+)
+2024-11-18 21:16:04,279 - root - INFO - Scaffolding memory high watermark: 10.2352294921875 GB.
+2024-11-18 21:16:04,279 - root - INFO - Starting Training Loop...
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 447, in <module>
+[rank2]:     train(params, args, local_rank, world_rank, world_size)
+[rank2]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 176, in train
+[rank2]:     gen = model(inp)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1618, in forward
+[rank2]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1436, in _run_ddp_forward
+[rank2]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 227, in forward
+[rank2]:     x = blk(x)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 127, in forward
+[rank2]:     x = x + self.drop_path(self.mlp(self.norm2(x)))
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/normalization.py", line 201, in forward
+[rank2]:     return F.layer_norm(
+[rank2]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/functional.py", line 2575, in layer_norm
+[rank2]:     return torch.layer_norm(input, normalized_shape, weight, bias, eps, torch.backends.cudnn.enabled)
+[rank2]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 254.00 MiB. GPU 2 has a total capacity of 39.39 GiB of which 217.12 MiB is free. Including non-PyTorch memory, this process has 39.16 GiB memory in use. Of the allocated memory 31.28 GiB is allocated by PyTorch, and 155.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 447, in <module>
+[rank3]:     train(params, args, local_rank, world_rank, world_size)
+[rank3]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 176, in train
+[rank3]:     gen = model(inp)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1618, in forward
+[rank3]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1436, in _run_ddp_forward
+[rank3]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 227, in forward
+[rank3]:     x = blk(x)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 127, in forward
+[rank3]:     x = x + self.drop_path(self.mlp(self.norm2(x)))
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/normalization.py", line 201, in forward
+[rank3]:     return F.layer_norm(
+[rank3]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/functional.py", line 2575, in layer_norm
+[rank3]:     return torch.layer_norm(input, normalized_shape, weight, bias, eps, torch.backends.cudnn.enabled)
+[rank3]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 254.00 MiB. GPU 3 has a total capacity of 39.39 GiB of which 107.12 MiB is free. Including non-PyTorch memory, this process has 39.27 GiB memory in use. Of the allocated memory 31.53 GiB is allocated by PyTorch, and 155.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 447, in <module>
+[rank1]:     train(params, args, local_rank, world_rank, world_size)
+[rank1]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 176, in train
+[rank1]:     gen = model(inp)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1618, in forward
+[rank1]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1436, in _run_ddp_forward
+[rank1]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 227, in forward
+[rank1]:     x = blk(x)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 127, in forward
+[rank1]:     x = x + self.drop_path(self.mlp(self.norm2(x)))
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/normalization.py", line 201, in forward
+[rank1]:     return F.layer_norm(
+[rank1]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/functional.py", line 2575, in layer_norm
+[rank1]:     return torch.layer_norm(input, normalized_shape, weight, bias, eps, torch.backends.cudnn.enabled)
+[rank1]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 254.00 MiB. GPU 1 has a total capacity of 39.39 GiB of which 217.12 MiB is free. Including non-PyTorch memory, this process has 39.16 GiB memory in use. Of the allocated memory 31.28 GiB is allocated by PyTorch, and 155.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 447, in <module>
+[rank0]:     train(params, args, local_rank, world_rank, world_size)
+[rank0]:   File "/global/u1/t/train993/sc24-dl-tutorial/train_mp.py", line 176, in train
+[rank0]:     gen = model(inp)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1618, in forward
+[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/parallel/distributed.py", line 1436, in _run_ddp_forward
+[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 227, in forward
+[rank0]:     x = blk(x)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/global/u1/t/train993/sc24-dl-tutorial/networks/vit.py", line 127, in forward
+[rank0]:     x = x + self.drop_path(self.mlp(self.norm2(x)))
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/normalization.py", line 201, in forward
+[rank0]:     return F.layer_norm(
+[rank0]:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/functional.py", line 2575, in layer_norm
+[rank0]:     return torch.layer_norm(input, normalized_shape, weight, bias, eps, torch.backends.cudnn.enabled)
+[rank0]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 254.00 MiB. GPU 0 has a total capacity of 39.39 GiB of which 107.12 MiB is free. Including non-PyTorch memory, this process has 39.27 GiB memory in use. Of the allocated memory 31.53 GiB is allocated by PyTorch, and 155.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+srun: error: nid002036: task 1: Exited with exit code 1
+srun: Terminating StepId=33073066.0
+slurmstepd: error: *** STEP 33073066.0 ON nid002036 CANCELLED AT 2024-11-18T21:16:21 ***
+srun: error: nid002036: tasks 0,2-3: Exited with exit code 1

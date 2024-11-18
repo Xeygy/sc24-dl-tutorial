@@ -1,0 +1,100 @@
+Enabling profiling...
++ srun -u shifter -V /pscratch/sd/s/shas1693/data/sc24_tutorial_data:/data -V /pscratch/sd/t/train993/sc24-dl-tutorial/logs:/logs bash -c '
+    source export_DDP_vars.sh
+    nsys profile --trace=cuda,cublas,nvtx --kill none -c cudaProfilerApi -f true -o /pscratch/sd/t/train993/sc24-dl-tutorial/logs/baseline python train.py --config=short
+    '
+2024-11-18 14:55:10,922 - root - INFO - ------------------ Configuration ------------------
+2024-11-18 14:55:10,922 - root - INFO - Configuration file: /global/u1/t/train993/sc24-dl-tutorial/config/ViT.yaml
+2024-11-18 14:55:10,923 - root - INFO - Configuration name: short
+2024-11-18 14:55:10,923 - root - INFO - limit_nsamples 512
+2024-11-18 14:55:10,923 - root - INFO - limit_nsamples_val 128
+2024-11-18 14:55:10,923 - root - INFO - num_iters 128
+2024-11-18 14:55:10,923 - root - INFO - embed_dim 384
+2024-11-18 14:55:10,923 - root - INFO - depth 12
+2024-11-18 14:55:10,923 - root - INFO - dropout 0.0
+2024-11-18 14:55:10,923 - root - INFO - patch_size 8
+2024-11-18 14:55:10,923 - root - INFO - num_heads 8
+2024-11-18 14:55:10,923 - root - INFO - img_size [360, 720]
+2024-11-18 14:55:10,923 - root - INFO - dt 1
+2024-11-18 14:55:10,923 - root - INFO - global_batch_size 16
+2024-11-18 14:55:10,923 - root - INFO - amp_mode none
+2024-11-18 14:55:10,924 - root - INFO - enable_fused False
+2024-11-18 14:55:10,924 - root - INFO - enable_jit False
+2024-11-18 14:55:10,924 - root - INFO - expdir /logs
+2024-11-18 14:55:10,924 - root - INFO - lr_schedule cosine
+2024-11-18 14:55:10,924 - root - INFO - lr 0.0005
+2024-11-18 14:55:10,924 - root - INFO - warmup 0
+2024-11-18 14:55:10,924 - root - INFO - optimizer Adam
+2024-11-18 14:55:10,924 - root - INFO - data_loader_config pytorch
+2024-11-18 14:55:10,924 - root - INFO - num_data_workers 0
+2024-11-18 14:55:10,924 - root - INFO - n_in_channels 20
+2024-11-18 14:55:10,924 - root - INFO - n_out_channels 20
+2024-11-18 14:55:10,924 - root - INFO - train_data_path /data/train
+2024-11-18 14:55:10,924 - root - INFO - valid_data_path /data/valid
+2024-11-18 14:55:10,924 - root - INFO - inf_data_path /data/test
+2024-11-18 14:55:10,924 - root - INFO - time_means_path /data/stats/time_means.npy
+2024-11-18 14:55:10,925 - root - INFO - global_means_path /data/stats/global_means.npy
+2024-11-18 14:55:10,925 - root - INFO - global_stds_path /data/stats/global_stds.npy
+2024-11-18 14:55:10,925 - root - INFO - wireup_info env
+2024-11-18 14:55:10,925 - root - INFO - wireup_store tcp
+2024-11-18 14:55:10,925 - root - INFO - amp_enabled False
+2024-11-18 14:55:10,925 - root - INFO - amp_dtype torch.float32
+2024-11-18 14:55:10,925 - root - INFO - ---------------------------------------------------
+2024-11-18 14:55:11,129 - root - INFO - rank 0, begin data loader init
+2024-11-18 14:55:11,175 - root - INFO - Getting file stats from /data/train/1990.h5
+2024-11-18 14:55:11,176 - root - INFO - Overriding total number of samples to: 512
+2024-11-18 14:55:11,176 - root - INFO - Number of samples per year: 1460
+2024-11-18 14:55:11,176 - root - INFO - Found data at path /data/train. Number of examples: 512. Image Shape: 360 x 720 x 20
+2024-11-18 14:55:11,178 - root - INFO - Getting file stats from /data/valid/2016.h5
+2024-11-18 14:55:11,178 - root - INFO - Overriding total number of samples to: 128
+2024-11-18 14:55:11,178 - root - INFO - Number of samples per year: 1460
+2024-11-18 14:55:11,178 - root - INFO - Found data at path /data/valid. Number of examples: 128. Image Shape: 360 x 720 x 20
+2024-11-18 14:55:11,178 - root - INFO - rank 0, data loader initialized
+2024-11-18 14:55:12,493 - root - INFO - VisionTransformer(
+  (patch_embed): PatchEmbed(
+    (proj): Conv2d(20, 384, kernel_size=(8, 8), stride=(8, 8))
+  )
+  (pos_drop): Dropout(p=0.0, inplace=False)
+  (blocks): ModuleList(
+    (0-11): 12 x Block(
+      (drop_path): Identity()
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (q): Linear(in_features=384, out_features=384, bias=True)
+        (k): Linear(in_features=384, out_features=384, bias=True)
+        (v): Linear(in_features=384, out_features=384, bias=True)
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (mlp): MLP(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate='none')
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (norm): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+  (head): Linear(in_features=384, out_features=1280, bias=False)
+)
+2024-11-18 14:55:12,494 - root - INFO - Starting Training Loop...
+2024-11-18 14:56:13,769 - root - INFO - Time taken for epoch 1 is 58.631682 sec, avg 8.732480 samples/sec
+2024-11-18 14:56:13,769 - root - INFO -   Avg train loss=0.578789
+2024-11-18 14:56:19,160 - root - INFO -   Avg val loss=0.42161116003990173
+2024-11-18 14:56:19,160 - root - INFO -   Total validation time: 4.685916185379028 sec
+2024-11-18 14:57:14,456 - root - INFO - Time taken for epoch 2 is 55.290100 sec, avg 9.260247 samples/sec
+2024-11-18 14:57:14,456 - root - INFO -   Avg train loss=0.390880
+2024-11-18 14:57:20,258 - root - INFO -   Avg val loss=0.374159574508667
+2024-11-18 14:57:20,258 - root - INFO -   Total validation time: 5.095183610916138 sec
+2024-11-18 14:58:17,787 - root - INFO - Time taken for epoch 3 is 57.524212 sec, avg 8.900600 samples/sec
+2024-11-18 14:58:17,787 - root - INFO -   Avg train loss=0.355815
+2024-11-18 14:58:22,724 - root - INFO -   Avg val loss=0.35313040018081665
+2024-11-18 14:58:22,724 - root - INFO -   Total validation time: 4.248697996139526 sec
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-4ed5.qdstrm'
+[1/1] [0%                          ] baseline.nsys-rep[1/1] [0%                          ] baseline.nsys-rep[1/1] [13%                         ] baseline.nsys-rep[1/1] [=17%                        ] baseline.nsys-rep[1/1] [==18%                       ] baseline.nsys-rep[1/1] [===23%                      ] baseline.nsys-rep[1/1] [=====32%                    ] baseline.nsys-rep[1/1] [=======37%                  ] baseline.nsys-rep[1/1] [=======38%                  ] baseline.nsys-rep[1/1] [==========48%               ] baseline.nsys-rep[1/1] [============57%             ] baseline.nsys-rep[1/1] [=============58%            ] baseline.nsys-rep[1/1] [=============59%            ] baseline.nsys-rep[1/1] [=============60%            ] baseline.nsys-rep[1/1] [==============61%           ] baseline.nsys-rep[1/1] [==============62%           ] baseline.nsys-rep[1/1] [==============63%           ] baseline.nsys-rep[1/1] [==============64%           ] baseline.nsys-rep[1/1] [===============65%          ] baseline.nsys-rep[1/1] [===============66%          ] baseline.nsys-rep[1/1] [===============67%          ] baseline.nsys-rep[1/1] [================68%         ] baseline.nsys-rep[1/1] [================69%         ] baseline.nsys-rep[1/1] [================70%         ] baseline.nsys-rep[1/1] [================71%         ] baseline.nsys-rep[1/1] [=================72%        ] baseline.nsys-rep[1/1] [=================73%        ] baseline.nsys-rep[1/1] [=================74%        ] baseline.nsys-rep[1/1] [==================75%       ] baseline.nsys-rep[1/1] [==================76%       ] baseline.nsys-rep[1/1] [==================77%       ] baseline.nsys-rep[1/1] [==================78%       ] baseline.nsys-rep[1/1] [===================79%      ] baseline.nsys-rep[1/1] [===================80%      ] baseline.nsys-rep[1/1] [===================81%      ] baseline.nsys-rep[1/1] [===================82%      ] baseline.nsys-rep[1/1] [====================83%     ] baseline.nsys-rep[1/1] [====================84%     ] baseline.nsys-rep[1/1] [====================85%     ] baseline.nsys-rep[1/1] [=====================86%    ] baseline.nsys-rep[1/1] [=====================87%    ] baseline.nsys-rep[1/1] [=====================88%    ] baseline.nsys-rep[1/1] [=====================89%    ] baseline.nsys-rep[1/1] [======================90%   ] baseline.nsys-rep[1/1] [======================91%   ] baseline.nsys-rep[1/1] [======================92%   ] baseline.nsys-rep[1/1] [=======================93%  ] baseline.nsys-rep[1/1] [=======================94%  ] baseline.nsys-rep[1/1] [=======================95%  ] baseline.nsys-rep[1/1] [========================100%] baseline.nsys-rep[1/1] [========================100%] baseline.nsys-rep
+Generated:
+    /pscratch/sd/t/train993/sc24-dl-tutorial/logs/baseline.nsys-rep
